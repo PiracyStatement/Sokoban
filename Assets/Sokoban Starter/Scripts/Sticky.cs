@@ -22,10 +22,7 @@ public class Sticky : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            print(isInMotion);
-        }
+
     }
     public bool PushBlock(string dir) //returns true if this block can be moved
     {
