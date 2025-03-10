@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Smooth : MonoBehaviour
+public class Clingy : MonoBehaviour
 {
     [SerializeField] private GameObject grid;
     private GridManager gridManager;
@@ -24,7 +24,6 @@ public class Smooth : MonoBehaviour
     {
         
     }
-
     public bool PushBlock(string dir) //returns true if this block can be moved
     {
         if (isInMotion == true)
@@ -33,7 +32,6 @@ public class Smooth : MonoBehaviour
         }
 
         isInMotion = true;
-
         if (gridManager.BasicMoveCheck(gridPosition, dir, false))
         {
             if (dir == "left")

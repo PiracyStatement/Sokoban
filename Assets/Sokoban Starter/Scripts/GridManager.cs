@@ -93,8 +93,6 @@ public class GridManager : MonoBehaviour
             blockRight = gridPlacements[gridPosition.x + 1, gridPosition.y];
         }
 
-        //special case if we're the sticky block
-
         //normal block
         if (dir == "left" && blockLeft != null)
         {
@@ -106,9 +104,13 @@ public class GridManager : MonoBehaviour
             {
                 return blockLeft.GetComponent<Smooth>().PushBlock("left");
             }
-            else if (blockLeft.tag == "Sticky")
+            else if (blockLeft.tag == "Sticky" && blockLeft.GetComponent<Sticky>().isInMotion == false)
             {
                 return blockLeft.GetComponent<Sticky>().PushBlock("left");
+            }
+            else if (blockLeft.tag == "Clingy")
+            {
+                return false;
             }
         }
         if (dir == "left")
@@ -126,6 +128,17 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         return blockRight.GetComponent<Sticky>().PullBlock("left");
+                    }
+                }
+                else if (blockRight != null && blockRight.tag == "Clingy")
+                {
+                    if (blockRight.GetComponent<Clingy>().isInMotion)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return blockRight.GetComponent<Clingy>().PushBlock("left");
                     }
                 }
                 if (blockUp != null && blockUp.tag == "Sticky")
@@ -168,6 +181,17 @@ public class GridManager : MonoBehaviour
                         else
                         {
                             return blockRight.GetComponent<Sticky>().PullBlock("left");
+                        }
+                    }
+                    else if (blockRight.tag == "Clingy")
+                    {
+                        if (blockRight.GetComponent<Clingy>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockRight.GetComponent<Clingy>().PushBlock("left");
                         }
                     }
                 }
@@ -220,15 +244,19 @@ public class GridManager : MonoBehaviour
             { 
                 return blockRight.GetComponent<Smooth>().PushBlock("right");
             }
-            else if (blockRight.tag == "Sticky")
+            else if (blockRight.tag == "Sticky" && blockRight.GetComponent<Sticky>().isInMotion == false)
             {
                 return blockRight.GetComponent<Sticky>().PushBlock("right");
+            }
+            else if (blockRight.tag == "Clingy")
+            {
+                return false;
             }
         }
         if (dir == "right")
         {
-            //if (isSticky == false)
-            //{
+            if (isSticky == false)
+            {
                 if (blockLeft != null && blockLeft.tag == "Sticky")
                 {
                     if (blockLeft.GetComponent<Sticky>().isInMotion)
@@ -238,6 +266,17 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         return blockLeft.GetComponent<Sticky>().PullBlock("right");
+                    }
+                }
+                else if (blockLeft != null && blockLeft.tag == "Clingy")
+                {
+                    if (blockLeft.GetComponent<Clingy>().isInMotion)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return blockLeft.GetComponent<Clingy>().PushBlock("right");
                     }
                 }
                 if (blockUp != null && blockUp.tag == "Sticky")
@@ -262,64 +301,75 @@ public class GridManager : MonoBehaviour
                         return blockDown.GetComponent<Sticky>().PullBlock("right");
                     }
                 }
-            //}
-            //else
-            //{
-                //if (blockLeft != null)
-                //{
-                //    if (blockLeft.tag == "Smooth")
-                //    {
-                //        blockLeft.GetComponent<Smooth>().PushBlock("right");
-                //    }
-                //    else if (blockLeft.tag == "Sticky")
-                //    {
-                //        if (blockLeft.GetComponent<Sticky>().isInMotion)
-                //        {
-                //            return true;
-                //        }
-                //        else
-                //        {
-                //            return blockLeft.GetComponent<Sticky>().PullBlock("right");
-                //        }
-                //    }
-                //}
-                //if (blockUp != null)
-                //{
-                //    if (blockUp.tag == "Smooth")
-                //    {
-                //        blockUp.GetComponent<Smooth>().PushBlock("right");
-                //    }
-                //    else if (blockUp.tag == "Sticky")
-                //    {
-                //        if (blockUp.GetComponent<Sticky>().isInMotion)
-                //        {
-                //            return true;
-                //        }
-                //        else
-                //        {
-                //            return blockUp.GetComponent<Sticky>().PullBlock("right");
-                //        }
-                //    }
-                //}
-                //if (blockDown != null)
-                //{
-                //    if (blockDown.tag == "Smooth")
-                //    {
-                //        blockDown.GetComponent<Smooth>().PushBlock("right");
-                //    }
-                //    else if (blockDown.tag == "Sticky")
-                //    {
-                //        if (blockDown.GetComponent<Sticky>().isInMotion)
-                //        {
-                //            return true;
-                //        }
-                //        else
-                //        {
-                //            return blockDown.GetComponent<Sticky>().PullBlock("right");
-                //        }
-                //    }
-                //}
-            //}
+            }
+            else
+            {
+                if (blockLeft != null)
+                {
+                    if (blockLeft.tag == "Smooth")
+                    {
+                        blockLeft.GetComponent<Smooth>().PushBlock("right");
+                    }
+                    else if (blockLeft.tag == "Sticky")
+                    {
+                        if (blockLeft.GetComponent<Sticky>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockLeft.GetComponent<Sticky>().PullBlock("right");
+                        }
+                    }
+                    else if (blockLeft.tag == "Clingy")
+                    {
+                        if (blockLeft.GetComponent<Clingy>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockLeft.GetComponent<Clingy>().PushBlock("right");
+                        }
+                    }
+                }
+                if (blockUp != null)
+                {
+                    if (blockUp.tag == "Smooth")
+                    {
+                        blockUp.GetComponent<Smooth>().PushBlock("right");
+                    }
+                    else if (blockUp.tag == "Sticky")
+                    {
+                        if (blockUp.GetComponent<Sticky>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockUp.GetComponent<Sticky>().PullBlock("right");
+                        }
+                    }
+                }
+                if (blockDown != null)
+                {
+                    if (blockDown.tag == "Smooth")
+                    {
+                        blockDown.GetComponent<Smooth>().PushBlock("right");
+                    }
+                    else if (blockDown.tag == "Sticky")
+                    {
+                        if (blockDown.GetComponent<Sticky>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockDown.GetComponent<Sticky>().PullBlock("right");
+                        }
+                    }
+                }
+            }
         }
 
         if (dir == "up" && blockUp != null)
@@ -332,9 +382,13 @@ public class GridManager : MonoBehaviour
             {
                 return blockUp.GetComponent<Smooth>().PushBlock("up");
             }
-            else if (blockUp.tag == "Sticky")
+            else if (blockUp.tag == "Sticky" && blockUp.GetComponent<Sticky>().isInMotion == false)
             {
                 return blockUp.GetComponent<Sticky>().PushBlock("up");
+            }
+            else if (blockUp.tag == "Clingy")
+            {
+                return false;
             }
         }
         if (dir == "up")
@@ -372,6 +426,17 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         return blockDown.GetComponent<Sticky>().PullBlock("up");
+                    }
+                }
+                else if (blockDown != null && blockDown.tag == "Clingy")
+                {
+                    if (blockDown.GetComponent<Clingy>().isInMotion)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return blockDown.GetComponent<Clingy>().PushBlock("up");
                     }
                 }
             }
@@ -430,6 +495,17 @@ public class GridManager : MonoBehaviour
                             return blockDown.GetComponent<Sticky>().PullBlock("up");
                         }
                     }
+                    else if (blockDown.tag == "Clingy")
+                    {
+                        if (blockDown.GetComponent<Clingy>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockDown.GetComponent<Clingy>().PushBlock("up");
+                        }
+                    }
                 }
             }
         }
@@ -444,9 +520,13 @@ public class GridManager : MonoBehaviour
             {
                 return blockDown.GetComponent<Smooth>().PushBlock("down");
             }
-            else if (blockDown.tag == "Sticky")
+            else if (blockDown.tag == "Sticky" && blockDown.GetComponent<Sticky>().isInMotion == false)
             {
                 return blockDown.GetComponent<Sticky>().PushBlock("down");
+            }
+            else if (blockDown.tag == "Clingy")
+            {
+                return false;
             }
         }
         if (dir == "down")
@@ -484,6 +564,17 @@ public class GridManager : MonoBehaviour
                     else
                     {
                         return blockUp.GetComponent<Sticky>().PullBlock("down");
+                    }
+                }
+                else if (blockUp != null && blockUp.tag == "Clingy")
+                {
+                    if (blockUp.GetComponent<Clingy>().isInMotion)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return blockUp.GetComponent<Clingy>().PushBlock("down");
                     }
                 }
             }
@@ -540,6 +631,17 @@ public class GridManager : MonoBehaviour
                         else
                         {
                             return blockUp.GetComponent<Sticky>().PullBlock("down");
+                        }
+                    }
+                    else if (blockUp.tag == "Clingy")
+                    {
+                        if (blockUp.GetComponent<Clingy>().isInMotion)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return blockUp.GetComponent<Clingy>().PushBlock("down");
                         }
                     }
                 }
